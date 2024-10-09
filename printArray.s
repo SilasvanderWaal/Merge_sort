@@ -3,6 +3,7 @@ format_string: .asciiz "%d "
 newline_string: .asciiz "\n"
 	
 	.globl printArray
+	.text
 printArray: 
 	#Moving the stackpointer down 8 addresses
 	subu $sp, $sp, 32
@@ -22,11 +23,11 @@ printArray:
 	
 	la $a0, newline_string
 	jal print
-	
+		
 print_loop:
 	bge $s2, $s1, stop_rutin
 	la $a0, format_string
-	lw $a1, 0($s0)
+	lw $a1, ($s0)
 	jal print
 	addi $s0, $s0, 4	#move to the next adress in the array
 	addi $s2, $s2, 1

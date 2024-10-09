@@ -1,5 +1,7 @@
 	.globl print
+	.text
 print:
+	
 	sw	$a0, 0($sp)		#store a-registers on stack
 	sw	$a1, 4($sp)
 	sw	$a2, 8($sp)
