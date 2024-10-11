@@ -1,11 +1,13 @@
 	.globl print
 	.text
 print:
-	
+	subu	$sp, $sp, 20
 	sw	$a0, 0($sp)		#store a-registers on stack
 	sw	$a1, 4($sp)
 	sw	$a2, 8($sp)
 	sw	$a3, 12($sp)		#a0 = address to substring to be printed
+	sw	$ra, 16($sp)
+	
 	move 	$t0, $a0		#t0 = current address
 	addi	$t1, $zero, 4		#t1 = parameter numbering * 4
 	lb	$t2, 0($t0)		#t2 = character in current address
@@ -61,4 +63,11 @@ endWhile:
 	addi	$t7, $zero, 0xffff
 	addi	$t8, $zero, 0xffff
 	addi	$t9, $zero, 0xffff
+	
+	lw	$a0, 0($sp)		#load a-registers from stack
+	lw	$a1, 4($sp)
+	lw	$a2, 8($sp)
+	lw	$a3, 12($sp)		#a0 = address to substring to be printed
+	lw	$ra, 16($sp)
+	addu	$sp, $sp, 20
 	jr 	$ra

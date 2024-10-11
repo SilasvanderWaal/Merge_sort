@@ -6,16 +6,12 @@ newline_string: .asciiz "\n"
 	.text
 printArray: 
 	#Moving the stackpointer down 8 addresses
-	subu $sp, $sp, 32
-	#Saving arguments from previous rutin
-	sw $a0, 0($sp)
-	sw $a1, 4($sp)
-	sw $a2, 8($sp)	
-	sw $a3, 12($sp)
-	sw $s0, 16($sp)
-	sw $s1, 20($sp)
-	sw $s2, 24($sp)
-	sw $ra, 28($sp)
+	subu $sp, $sp, 16
+	#Saving 
+	sw $s0, 0($sp)
+	sw $s1, 4($sp)
+	sw $s2, 8($sp)
+	sw $ra, 12($sp)
 	
 	move $s0, $a0	# s0 = array start
 	move $s1, $a1	# s1 = array size
@@ -27,27 +23,23 @@ printArray:
 print_loop:
 	bge $s2, $s1, stop_rutin
 	la $a0, format_string
-	lw $a1, ($s0)
+	sll $t0, $s2, 2
+	add $t0, $t0, $s0
+	lw $a1, ($t0)
 	jal print
-	addi $s0, $s0, 4	#move to the next adress in the array
 	addi $s2, $s2, 1
 	j print_loop
-	
 	
 stop_rutin:
 	la $a0, newline_string
 	jal print
 	
 	#Restoring the state before the rutin
-	lw $a0, 0($sp)
-	lw $a1, 4($sp)
-	lw $a2, 8($sp)	
-	lw $a3, 12($sp)
-	lw $s0, 16($sp)
-	lw $s1, 20($sp)
-	lw $s2, 24($sp)
-	lw $ra, 28($sp)
-	addu $sp, $sp, 32
+	lw $s0, 0($sp)
+	lw $s1, 4($sp)
+	lw $s2, 8($sp)
+	lw $ra, 12($sp)
+	addu $sp, $sp, 16
 	
 	jr $ra
 	

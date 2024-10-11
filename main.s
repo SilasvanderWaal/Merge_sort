@@ -5,10 +5,11 @@ antal: .word 10
 	.text
 	.globl main
 main:
-	#Test print sub-rutin
+	
 	la $a0, vek
 	lw $a1, antal
-	jal printArray
+	jal mergeSort
+	
 	
 	li $v0, 10
 	syscall
