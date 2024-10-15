@@ -35,8 +35,8 @@ for_loop:
 	j for_loop
 	
 while_loop:
+	bge $s1, $s0, while_loop_2	#Checking while loop conditions 
 	bge $s2, $a1, while_loop_2
-	bge $s1, $s0, while_loop_3	#Checking while loop conditions 
 	
 	sll $t1, $s1, 2			#i*4 for array offset
 	add $t1, $t1, $sp		#add offset to the stack pointer
@@ -61,9 +61,9 @@ if:
 k_increment:
 	addi $s3, $s3, 1		#k++
 	j while_loop
-	
+
 while_loop_2:
-    	bge $s1, $s0, end_while_loop_3    	#branch if(i >= half)
+    	bge $s1, $s0, while_loop_3    	#branch if(i >= half)
     	sll $t1, $s1, 2             		#i * 4 for array offset
     	add $t1, $sp, $t1
     	lw $t2, 0($t1)             		#Load in b[i]
