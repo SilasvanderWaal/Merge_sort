@@ -2,11 +2,13 @@
 	.text
 mergeSort:
 	#Saving the start address and the size
-	subu $sp, $sp, 16
+	subu $sp, $sp, 24
 	sw $s0, ($sp)
 	sw $s1, 4($sp)
-	sw $s2, 8($sp)
+	sw $s3, 8($sp)
 	sw $ra, 12($sp)
+	sw $a0, 16($sp)
+	sw $a1, 20($sp)
 	
 	move $s0, $a0
 	move $s1, $a1
@@ -32,7 +34,7 @@ exit_loop:
 	#loading previous values 
 	lw $s0, ($sp)
 	lw $s1, 4($sp)
-	lw $s2, 8($sp)
+	lw $s3, 8($sp)
 	lw $ra, 12($sp)
-	addu $sp, $sp, 16
+	addu $sp, $sp, 24
 	jr $ra				#Jump back

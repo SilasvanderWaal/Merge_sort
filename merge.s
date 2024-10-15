@@ -4,14 +4,15 @@
 	# a1 -> Size of the array
 merge: 
 	#Saving arguments from previous rutin
-	subu $sp, $sp, 28
+	subu $sp, $sp, 32
 	sw $s0, 0($sp)
 	sw $s1, 4($sp)
 	sw $s2, 8($sp)
 	sw $s3, 12($sp)
 	sw $s4, 16($sp)
 	sw $s5, 20($sp)
-	sw $ra, 24($sp)
+	sw $s6, 24($sp)
+	sw $ra, 28($sp)
 	
 	srl $s0, $a1, 1		#s0 = size / 2
 	move $s1, $zero		#s1 = i
@@ -23,26 +24,26 @@ merge:
 	#Dynamicly allocating memory on the stack for b[]
 	sll $t0, $a1, 2
 	subu $sp, $sp, $t0
+	move $s6, $sp
 
 for_loop:
 	bge $s4, $a1, while_loop	#Check if i <= size
 	sll $t1, $s4, 2			#t1 = i *4
 	add $t2, $s5, $t1
 	lw $t3, ($t2)			#t2 = a[i]
-	add $t4, $sp, $t1
+	add $t4, $s6, $t1
 	sw $t3, ($t4)			#Save t2 to b[i]
 	addi $s4, $s4, 1		#i++
 	j for_loop
-	
 while_loop:
 	bge $s1, $s0, while_loop_2	#Checking while loop conditions 
 	bge $s2, $a1, while_loop_2
 	
 	sll $t1, $s1, 2			#i*4 for array offset
-	add $t1, $t1, $sp		#add offset to the stack pointer
+	add $t1, $t1, $s6		#add offset to the stack pointer
 	lw $t2, ($t1)			#Loading in b[i]
 	sll $t3, $s2, 2			#j*4 for array offest
-	add $t3, $t3, $sp		#add offset to the stackpointer
+	add $t3, $t3, $s6		#add offset to the stackpointer
 	lw $t4, ($t3)			#loading in b[j]
 	ble $t2, $t4, if		#if(b[j] <= b[j]) go to if
 	
@@ -65,7 +66,7 @@ k_increment:
 while_loop_2:
     	bge $s1, $s0, while_loop_3    	#branch if(i >= half)
     	sll $t1, $s1, 2             		#i * 4 for array offset
-    	add $t1, $sp, $t1
+    	add $t1, $s6, $t1
     	lw $t2, 0($t1)             		#Load in b[i]
     	sll $t3, $s3, 2             		#k*4 for array offset
     	add $t3, $s5, $t3
@@ -75,9 +76,9 @@ while_loop_2:
     	j while_loop_2
 
 while_loop_3:
-	bge $s2, $a1, end_while_loop_3		#Branch if i is equal or greather than size
+	bge $s2, $a1, end_while_loop_3		#Branch if j is equal or greather than size
 	sll $t1, $s2, 2				#j * 4 for array offset
-	add $t1, $t1, $sp			#adding the offset to the stackpointer
+	add $t1, $t1, $s6			#adding the offset to the stackpointer
 	lw $t2, ($t1)				#loading in the value from b[]
 	sll $t3, $s3, 2				#k * 4 for array offset
 	add $t3, $t3, $s5			#adding k to base array a[]
@@ -98,7 +99,7 @@ end_while_loop_3:
 	lw $s3, 12($sp)
 	lw $s4, 16($sp)
 	lw $s5, 20($sp)
-	lw $ra, 24($sp)
-	#Moving the stackpointer down 8 addresses
-	addu $sp, $sp, 28
+	lw $s6, 24($sp)
+	lw $ra, 28($sp)
+	addu $sp, $sp, 32
 	jr $ra
